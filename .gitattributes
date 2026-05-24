@@ -1,0 +1,18 @@
+# Normalize line endings to LF on all platforms
+* text=auto eol=lf
+
+# Explicitly declare text files
+*.ts   text eol=lf
+*.tsx  text eol=lf
+*.js   text eol=lf
+*.mjs  text eol=lf
+*.json text eol=lf
+*.css  text eol=lf
+*.md   text eol=lf
+*.mts  text eol=lf
+
+# Declare binary files
+*.ico  binary
+*.png  binary
+*.jpg  binary
+*.svg  binary
