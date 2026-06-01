@@ -1,28 +1,42 @@
 {
-  "name": "ai-pm-coach",
-  "version": "0.1.0",
+  "name": "ai-pm-interview-coach",
+  "version": "2.0.0",
+  "description": "Production-grade AI coaching for product management interviews. Structured evaluation, session memory, FAANG follow-up probing, and final readiness report — powered by Groq + Llama 3.1.",
   "private": true,
+  "author": "Sankalp Dusane",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sankalpdusane/ai-pm-interview-coach.git"
+  },
+  "keywords": [
+    "pm-interview", "product-manager", "ai-coach", "groq", "llama3",
+    "nextjs", "typescript", "interview-prep"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "scripts": {
-    "dev": "next dev",
+    "dev":   "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint":  "eslint ."
   },
   "dependencies": {
-    "groq-sdk": "^1.2.0",
-    "next": "16.2.6",
-    "react": "19.2.4",
+    "groq-sdk":  "^1.2.0",
+    "next":      "^15.3.4",
+    "react":     "19.2.4",
     "react-dom": "19.2.4",
-    "zod": "^4.4.3"
+    "zod":       "^4.4.3"
   },
   "devDependencies": {
-    "@tailwindcss/postcss": "^4",
-    "@types/node": "^20.19.41",
-    "@types/react": "^19",
-    "@types/react-dom": "^19",
-    "eslint": "^9",
-    "eslint-config-next": "16.2.6",
-    "tailwindcss": "^4",
-    "typescript": "^5"
+    "@tailwindcss/postcss":  "^4",
+    "@types/node":           "^20.19.41",
+    "@types/react":          "^19",
+    "@types/react-dom":      "^19",
+    "eslint":                "^9",
+    "eslint-config-next":    "^15.3.4",
+    "tailwindcss":           "^4",
+    "typescript":            "^5"
   }
 }
