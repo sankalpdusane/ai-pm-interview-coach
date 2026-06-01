@@ -1,7 +1,5 @@
 <div align="center">
 
-<img src="https://raw.githubusercontent.com/sankalpdusane/ai-pm-interview-coach/feat/v2/public/logo-placeholder.png" width="64" height="64" alt="AI PM Coach" onerror="this.style.display='none'">
-
 # AI PM Interview Coach
 
 **Production-grade AI coaching for product management interviews.**  
@@ -14,9 +12,36 @@ Structured evaluation · Session memory · FAANG follow-up probing · Final read
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow?style=flat-square)](LICENSE)
 [![Node](https://img.shields.io/badge/Node.js-18%2B-339933?style=flat-square&logo=node.js&logoColor=white)](https://nodejs.org/)
 
-[Live Demo](https://github.com/sankalpdusane/ai-pm-interview-coach) · [V1 Tag](https://github.com/sankalpdusane/ai-pm-interview-coach/tree/v1.0) · [V2 Branch](https://github.com/sankalpdusane/ai-pm-interview-coach/tree/feat/v2) · [Open an Issue](https://github.com/sankalpdusane/ai-pm-interview-coach/issues)
+[V1 Tag](https://github.com/sankalpdusane/ai-pm-interview-coach/tree/v1.0) · [V2 Branch](https://github.com/sankalpdusane/ai-pm-interview-coach/tree/feat/v2) · [Open an Issue](https://github.com/sankalpdusane/ai-pm-interview-coach/issues)
 
 </div>
+
+---
+
+## Demo
+
+> Full walkthrough of all 6 features — from mode selection to final session report.
+
+### 1 · Select Your Interview Mode
+![Mode Selector](public/screenshots/01-mode-selector.png)
+*4 interview modes — Product Design, Execution, Metrics, Behavioral — each with a mode-specific scoring lens and prompt.*
+
+### 2 · Get a Question, Write Your Answer
+![Question and Answer](public/screenshots/02-question-answer.png)
+*30 curated questions by category and difficulty. Framework hints available on demand. Character counter enforces realistic interview constraints.*
+
+### 3 · AI Scores Your Answer Across 4 Dimensions
+![Evaluation Results](public/screenshots/03-evaluation-results.png)
+*Clarity · Structure · Product Thinking · Depth — each scored 0–10 with anchored rubric waypoints. Strengths, weaknesses, and a prioritised improvement list extracted by the model.*
+
+### 4 · FAANG Follow-up + Final Session Report
+![Follow-up and Report](public/screenshots/04-followup-report.png)
+*After evaluating, get the exact probing question a FAANG PM interviewer would ask. After 2+ answers, generate a full session report with readiness classification (`ready` / `almost` / `needs_work`) and an improvement plan.*
+
+### Full App
+![Full App Hero](public/screenshots/00-hero.png)
+
+> **Note on video demo:** A screen-recorded `.mp4` walkthrough requires a live browser environment. To record your own: boot the dev server (`npm run dev`), open `http://localhost:3000`, and use [OBS Studio](https://obsproject.com/) (free, cross-platform) or Windows Game Bar (`Win + G`) to capture. The full evaluation flow takes under 60 seconds.
 
 ---
 
@@ -93,13 +118,13 @@ Evaluation results are atomic — displaying partial scores mid-render is confus
 Fixed windows leak: 10 req at 11:59 + 10 req at 12:00 = 20 requests in 2 seconds while technically "within limits." The sliding-window log stores per-IP timestamps, evicts stale entries on every check, and is accurate to the millisecond at negligible memory cost for 10 req/min per IP.
 
 **Why a charCodeAt hash for cache keys instead of SHA-256?**  
-`crypto.subtle` is async; `require('crypto')` may not be available in all Edge runtimes. The charCodeAt sum mod 1,000,000 is deterministic, runs synchronously with zero imports, and is collision-resistant for realistic PM answer lengths (40–3000 chars). Collision risk for identical inputs is zero by definition.
+`crypto.subtle` is async; `require('crypto')` may not be available in all Edge runtimes. The charCodeAt sum mod 1,000,000 is deterministic, runs synchronously with zero imports, and is collision-resistant for realistic PM answer lengths (40–3000 chars).
 
 **Why `instrumentation.ts` for the localStorage polyfill?**  
-Next.js 15's instrumentation hook runs on the server *before any route compiles or renders*. This is the only safe place to patch `globalThis.localStorage` when Node.js is started with external flags (e.g. `--localstorage-file`) that create a broken shim. Route-level polyfills run too late — webpack has already evaluated the broken value.
+Next.js 15's instrumentation hook runs on the server *before any route compiles or renders*. This is the only safe place to patch `globalThis.localStorage` when Node.js is started with external flags that create a broken shim. Route-level polyfills run too late.
 
 **Why `ssr: false` with `dynamic()` in a Client Component wrapper?**  
-`InterviewCoach.tsx` uses zero localStorage at the module level — but its transitive imports (Geist font, Tailwind) may. By deferring hydration entirely to the client via `dynamic(() => import(...), { ssr: false })`, we guarantee the component never runs in Node.js context, regardless of what its dependencies do.
+`InterviewCoach.tsx` uses zero localStorage at the module level — but its transitive imports may. By deferring hydration entirely to the client via `dynamic(() => import(...), { ssr: false })`, we guarantee the component never runs in Node.js context, regardless of what its dependencies do.
 
 ---
 
@@ -113,7 +138,7 @@ ai-pm-coach/
 │   │   ├── layout.tsx              # Root layout, Geist font, SEO metadata
 │   │   ├── page.tsx                # Client wrapper — dynamic import with ssr:false
 │   │   ├── globals.css             # Dark design system, keyframe animations, tokens
-│   │   ├── InterviewCoach.tsx      # Full V2 UI — all 6 features, 933 lines, client-only
+│   │   ├── InterviewCoach.tsx      # Full V2 UI — all 6 features, client-only
 │   │   └── api/
 │   │       ├── evaluate/
 │   │       │   └── route.ts        # V1 endpoint (preserved, backward-compatible)
@@ -132,9 +157,11 @@ ai-pm-coach/
 │       ├── v2-prompts.ts           # V2 mode-aware prompts with 4-dim anchored rubric
 │       ├── cache.ts                # Generic TTL Map cache, deterministic key generation
 │       └── rateLimit.ts            # Sliding-window rate limiter, per-IP, 10 req/min
+├── public/
+│   └── screenshots/                # Demo screenshots for README
 ├── .env.example                    # Required environment variable template
 ├── .gitignore                      # node_modules, .next, .env.local, build artefacts
-├── next.config.ts                  # Clean Next.js config (instrumentation auto-loaded)
+├── next.config.ts                  # Clean Next.js config
 ├── package.json                    # Scripts: dev, build, start, lint
 ├── tsconfig.json                   # Strict TypeScript, path alias @/*
 └── LICENSE                         # MIT
@@ -187,7 +214,7 @@ npm run start      # Serve production build
 npm run lint       # ESLint
 ```
 
-> **Note:** This project uses Next.js 15 with webpack (not Turbopack) to ensure stable memory usage on all machines. Turbopack can be enabled with `next dev --turbopack` if your machine has ≥ 8 GB available RAM.
+> **Note:** This project uses Next.js 15 with webpack (not Turbopack) for stable memory usage. Turbopack can be enabled with `next dev --turbopack` if your machine has ≥ 8 GB available RAM.
 
 ---
 
@@ -278,7 +305,7 @@ Generates a final session report across all evaluated answers.
   "session_answers": [
     {
       "question":   "How would you improve YouTube?",
-      "scores":     { "clarity": { "score": 8 }, "structure": { "score": 9 }, "..." },
+      "scores":     { "clarity": { "score": 8 }, "structure": { "score": 9 } },
       "overall":    7.5,
       "strengths":  ["..."],
       "weaknesses": ["..."]
@@ -361,7 +388,7 @@ Scoring uses **explicit anchors** at 10 / 7 / 4 / 0 per dimension. This forces t
 | **Estimation** | 6 | *How many UPI transactions happen in India per day?* |
 | **Behavioural** | 6 | *Tell me about a time you made a product decision with incomplete data.* |
 
-Every question includes a **one-sentence framework hint** (e.g. *"Use CIRCLES: Comprehend → Identify users → …"*) available on demand without revealing the answer.
+Every question includes a **one-sentence framework hint** (e.g. *"Use CIRCLES: Comprehend → Identify users → …"*) available on demand.
 
 ---
 
@@ -378,7 +405,7 @@ V1 is permanently available at `git checkout v1.0`. The V2 API routes are namesp
 
 ## Security
 
-- **API keys**: `GROQ_API_KEY` lives only in `.env.local`, which is explicitly gitignored via `.env*` rule. It has never appeared in any commit.
+- **API keys**: `GROQ_API_KEY` lives only in `.env.local`, which is explicitly gitignored via `.env*` rule. It has never appeared in any commit. Verified with `git log --all -p | grep gsk_` → empty.
 - **Rate limiting**: 10 req / IP / min server-side — no client-side trust.
 - **Input validation**: Answer length enforced at both client (character counter + disabled button) and server (400 response).
 - **No persistent storage**: No database, no user accounts, no PII stored. All session state is in-browser React state only.
@@ -411,11 +438,12 @@ git commit -m "docs: update README section"
 
 ## Roadmap
 
-- [ ] Vercel deployment with environment variable guide
-- [ ] Streaming evaluation results (SSE) for perceived performance
+- [ ] Vercel deployment with one-click deploy button
+- [ ] Streaming evaluation results (SSE) for reduced perceived latency
 - [ ] Spaced-repetition question scheduler based on weak dimensions
 - [ ] Export session report as PDF
-- [ ] Multi-language support (Hindi, German, French)
+- [ ] Multi-language question bank (Hindi, German, French)
+- [ ] OAuth login + persistent session history
 
 ---
 
