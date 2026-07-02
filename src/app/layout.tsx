@@ -13,7 +13,6 @@ import "./globals.css";
 if (typeof window === "undefined") {
   const store: Record<string, string> = {};
   const noop = () => undefined;
-  // @ts-expect-error — polyfill for SSR environments
   globalThis.localStorage = {
     getItem:    (k: string) => store[k] ?? null,
     setItem:    (k: string, v: string) => { store[k] = String(v); },
@@ -22,9 +21,7 @@ if (typeof window === "undefined") {
     key:        (i: number) => Object.keys(store)[i] ?? null,
     get length() { return Object.keys(store).length; },
   };
-  // @ts-expect-error — polyfill
   globalThis.sessionStorage = globalThis.localStorage;
-  // @ts-expect-error — suppress any matchMedia calls during SSR
   globalThis.matchMedia = globalThis.matchMedia ?? (() => ({ matches: false, addListener: noop, removeListener: noop, addEventListener: noop, removeEventListener: noop, dispatchEvent: noop }));
 }
 
