@@ -23,22 +23,19 @@ export async function register() {
 
   // Only polyfill if the native implementation is broken/missing
   try {
-    // @ts-expect-error — globalThis in server runtime
     const existing = globalThis.localStorage;
     // Verify it actually works — the --localstorage-file flag creates one that throws
     existing?.getItem("__probe__");
   } catch {
-    // @ts-expect-error
+    
     Object.defineProperty(globalThis, "localStorage",   { value: safeStorage, configurable: true, writable: true });
-    // @ts-expect-error
     Object.defineProperty(globalThis, "sessionStorage", { value: safeStorage, configurable: true, writable: true });
     console.log("[instrumentation] localStorage SSR polyfill applied.");
   }
 
   // matchMedia polyfill — called by some UI libs during SSR
-  // @ts-expect-error
+  
   if (typeof globalThis.matchMedia !== "function") {
-    // @ts-expect-error
     globalThis.matchMedia = () => ({
       matches: false, media: "", onchange: null,
       addListener: () => {}, removeListener: () => {},
